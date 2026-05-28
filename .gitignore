@@ -1,0 +1,15 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Django y Bases de datos locales
+db.sqlite3
+*.log
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Variables de entorno (¡nunca subas tus contraseñas o SECRET_KEY!)
+.env

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar bien{% endblock %}
+
+{% block content %}
+<h2>Registrar bien</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+    <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+
+        {% if field.errors %}
+        <br>
+        <strong>{{ field.errors }}</strong>
+        {% endif %}
+    </p>
+    {% endfor %}
+
+    <button type="submit">Guardar bien</button>
+</form>
+
+<p>
+    <a href="{% url 'bienes:lista' %}">Volver al listado</a>
+</p>
+{% endblock %}

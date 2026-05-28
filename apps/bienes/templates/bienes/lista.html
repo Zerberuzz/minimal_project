@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Bienes registrados{% endblock %}
+
+{% block content %}
+<h2>Bienes registrados</h2>
+
+<p>
+    <a href="{% url 'bienes:crear' %}">Registrar nuevo bien</a>
+</p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Identificador</th>
+            <th>Descripción</th>
+            <th>Marca</th>
+            <th>Valor</th>
+            <th>Estatus</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bien in bienes %}
+        <tr>
+            <td>{{ bien.identificador }}</td>
+            <td>{{ bien.descripcion }}</td>
+            <td>{{ bien.marca }}</td>
+            <td>{{ bien.valor }}</td>
+            <td>{{ bien.estatus }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay bienes registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Reporte General de Bienes{% endblock %}
+
+{% block content %}
+<h2>Reporte General de Bienes</h2>
+<p>Bienvenido, <strong>{{ user.username }}</strong>. Estás visualizando el inventario global de la plataforma.</p>
+
+<div style="margin: 20px 0; padding: 10px; background-color: #f4f4f4; border-left: 5px solid #007bff;">
+    <strong>Resumen Ejecutivo:</strong> Total de bienes en el sistema: {{ total_bienes }}
+</div>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <thead style="background-color: #e9ecef;">
+        <tr>
+            <th>Identificador</th>
+            <th>Descripción</th>
+            <th>Marca</th>
+            <th>Valor Monetario</th>
+            <th>Estatus</th>
+            <th>Fecha de Registro</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bien in bienes %}
+        <tr>
+            <td>{{ bien.identificador }}</td>
+            <td>{{ bien.descripcion }}</td>
+            <td>{{ bien.marca }}</td>
+            <td>${{ bien.valor }}</td>
+            <td>
+                {% if bien.estatus == "bueno" %}
+                <span style="color: green;">Bueno</span>
+                {% elif bien.estatus == "regular" %}
+                <span style="color: orange;">Regular</span>
+                {% else %}
+                <span style="color: red;">Malo</span>
+                {% endif %}
+            </td>
+            <td>{{ bien.creado_en|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="text-align: center;">No existen bienes registrados en el sistema.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p style="margin-top: 20px;">
+    <a href="{% url 'bienes:lista' %}">Volver al listado estándar</a>
+</p>
+{% endblock %}
