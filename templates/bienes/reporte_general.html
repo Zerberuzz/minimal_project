@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Reporte General de Bienes{% endblock %}
+
+{% block content %}
+<div style="max-width: 1400px;">
+    <h2 style="margin-bottom: 2rem;">Reporte General de Bienes</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 4px;">
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">{{ estadisticas.total_bienes }}</div>
+            <div style="font-size: 0.9rem;">Total de Bienes</div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 1.5rem; border-radius: 4px;">
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">{{ estadisticas.total_clientes }}</div>
+            <div style="font-size: 0.9rem;">Total de Clientes</div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 4px;">
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">{{ estadisticas.registrados }}</div>
+            <div style="font-size: 0.9rem;">Registrados</div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.5rem; border-radius: 4px;">
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">{{ estadisticas.en_transito }}</div>
+            <div style="font-size: 0.9rem;">En Tránsito</div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 1.5rem; border-radius: 4px;">
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">{{ estadisticas.entregados }}</div>
+            <div style="font-size: 0.9rem;">Entregados</div>
+        </div>
+    </div>
+    
+    <div style="background: white; padding: 2rem; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1rem;">Valor Total de Bienes: <strong style="color: #667eea;">${{ estadisticas.valor_total|floatformat:2 }}</strong></h3>
+        <p style="color: #666; margin: 0.5rem 0;">Reporte completo de todos los bienes en el sistema.</p>
+    </div>
+    
+    <div style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+        <p style="margin: 0; color: #1565c0;"><strong>ℹ️ Información:</strong> Este reporte es solo de lectura. Los supervisores pueden consultar pero no pueden modificar información.</p>
+    </div>
+    
+    {% if bienes %}
+    <h3 style="margin-bottom: 1rem;">Detalle de Bienes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Identificador</th>
+                <th>Cliente</th>
+                <th>Descripción</th>
+                <th>Valor</th>
+                <th>Estatus</th>
+                <th>Creado</th>
+                <th>Actualizado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bien in bienes %}
+            <tr>
+                <td><strong>{{ bien.identificador }}</strong></td>
+                <td>{{ bien.cliente.nombre_completo }}</td>
+                <td>{{ bien.descripcion|truncatewords:5 }}</td>
+                <td>${{ bien.valor|floatformat:2 }}</td>
+                <td>
+                    <span style="
+                        display: inline-block;
+                        padding: 0.3rem 0.7rem;
+                        border-radius: 4px;
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        {% if bien.estatus == 'Registrado' %}
+                            background-color: #e3f2fd;
+                            color: #1565c0;
+                        {% elif bien.estatus == 'En tránsito' %}
+                            background-color: #fff3e0;
+                            color: #e65100;
+                        {% elif bien.estatus == 'Entregado' %}
+                            background-color: #e8f5e9;
+                            color: #2e7d32;
+                        {% endif %}
+                    ">{{ bien.estatus }}</span>
+                </td>
+                <td>{{ bien.creado_en|date:"d/m/Y H:i" }}</td>
+                <td>{{ bien.actualizado_en|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="background: #f9f9f9; padding: 2rem; text-align: center; border-radius: 4px;">
+        <p style="color: #666; margin: 0;">No hay bienes registrados en el sistema.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

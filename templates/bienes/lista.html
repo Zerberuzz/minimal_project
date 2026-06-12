@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Mis Bienes{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="margin: 0;">Listado de Bienes</h2>
+        {% if user.groups.all|length > 0 %}
+            {% if user.groups.all.0.name == 'cliente' %}
+            <a href="{% url 'bienes:crear' %}" class="btn btn-primary">➕ Registrar Nuevo Bien</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if bienes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Identificador</th>
+                <th>Descripción</th>
+                <th>Valor</th>
+                <th>Estatus</th>
+                <th>Creado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bien in bienes %}
+            <tr>
+                <td><strong>{{ bien.identificador }}</strong></td>
+                <td>{{ bien.descripcion|truncatewords:5 }}</td>
+                <td>${{ bien.valor|floatformat:2 }}</td>
+                <td>
+                    <span style="
+                        display: inline-block;
+                        padding: 0.3rem 0.7rem;
+                        border-radius: 4px;
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        {% if bien.estatus == 'Registrado' %}
+                            background-color: #e3f2fd;
+                            color: #1565c0;
+                        {% elif bien.estatus == 'En tránsito' %}
+                            background-color: #fff3e0;
+                            color: #e65100;
+                        {% elif bien.estatus == 'Entregado' %}
+                            background-color: #e8f5e9;
+                            color: #2e7d32;
+                        {% endif %}
+                    ">{{ bien.estatus }}</span>
+                </td>
+                <td>{{ bien.creado_en|date:"d/m/Y" }}</td>
+                <td>
+                    {% if user.groups.all|length > 0 %}
+                        {% if user.groups.all.0.name == 'cliente' %}
+                        <a href="{% url 'bienes:editar' bien.id %}" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">✏️ Editar</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <p style="text-align: center; color: #666; margin-top: 1rem;">
+        Total de bienes: <strong>{{ total }}</strong>
+    </p>
+    {% else %}
+    <div style="background: #f9f9f9; padding: 2rem; text-align: center; border-radius: 4px;">
+        <p style="color: #666; margin: 0;">No hay bienes registrados.</p>
+        {% if user.groups.all|length > 0 %}
+            {% if user.groups.all.0.name == 'cliente' %}
+            <a href="{% url 'bienes:crear' %}" class="btn btn-primary" style="margin-top: 1rem;">Registrar tu primer bien</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Bitácora de Auditoría{% endblock %}
+
+{% block content %}
+<div style="max-width: 1400px;">
+    <h2 style="margin-bottom: 2rem;">Bitácora de Auditoría</h2>
+    
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+        <p style="margin: 0; color: #856404;"><strong>🔐 Seguridad:</strong> Esta bitácora registra todas las acciones del sistema para auditoría y no repudio. Solo supervisores pueden verla.</p>
+    </div>
+    
+    {% if registros %}
+    <div style="background: white; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <p style="margin: 0; color: #666;">Total de registros: <strong>{{ total }}</strong></p>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha/Hora</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Acción</th>
+                <th>Resultado</th>
+                <th>IP Origen</th>
+                <th>Ruta</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in registros %}
+            <tr style="{% if registro.resultado == 'rechazado' %}background-color: #ffebee;{% elif registro.resultado == 'error' %}background-color: #fff3e0;{% else %}background-color: transparent;{% endif %}">
+                <td style="font-size: 0.9rem;">{{ registro.fecha_hora|date:"d/m/Y H:i:s" }}</td>
+                <td>{{ registro.usuario.username|default:"—" }}</td>
+                <td>
+                    <span style="
+                        display: inline-block;
+                        padding: 0.2rem 0.6rem;
+                        border-radius: 3px;
+                        font-size: 0.85rem;
+                        font-weight: 600;
+                        {% if registro.rol == 'cliente' %}
+                            background-color: #e3f2fd;
+                            color: #1565c0;
+                        {% elif registro.rol == 'supervisor' %}
+                            background-color: #f3e5f5;
+                            color: #6a1b9a;
+                        {% elif registro.rol == 'administrador' %}
+                            background-color: #ffebee;
+                            color: #c62828;
+                        {% else %}
+                            background-color: #eeeeee;
+                            color: #424242;
+                        {% endif %}
+                    ">{{ registro.rol }}</span>
+                </td>
+                <td>{{ registro.get_accion_display }}</td>
+                <td>
+                    <span style="
+                        display: inline-block;
+                        padding: 0.2rem 0.6rem;
+                        border-radius: 3px;
+                        font-size: 0.85rem;
+                        font-weight: 600;
+                        {% if registro.resultado == 'exitoso' %}
+                            background-color: #e8f5e9;
+                            color: #2e7d32;
+                        {% elif registro.resultado == 'rechazado' %}
+                            background-color: #ffcdd2;
+                            color: #c62828;
+                        {% else %}
+                            background-color: #fff3e0;
+                            color: #e65100;
+                        {% endif %}
+                    ">{{ registro.get_resultado_display }}</span>
+                </td>
+                <td style="font-family: monospace; font-size: 0.85rem;">{{ registro.ip_origen|default:"—" }}</td>
+                <td style="font-family: monospace; font-size: 0.85rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ registro.ruta }}</td>
+                <td style="font-size: 0.9rem; max-width: 250px;">{{ registro.descripcion|truncatewords:10 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="background: #f9f9f9; padding: 2rem; text-align: center; border-radius: 4px;">
+        <p style="color: #666; margin: 0;">No hay registros en la bitácora.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
