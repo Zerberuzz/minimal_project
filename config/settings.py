@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "apps.bienes",
     "apps.clientes",
-    #apps.rastreo",
+    "apps.rastreo",
 ]
 
 MIDDLEWARE = [
@@ -121,5 +121,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "bienes:lista"
+LOGIN_REDIRECT_URL = "lista_bienes"
 LOGOUT_REDIRECT_URL = "login"
+
+TOKEN_RASTREO_CAMIONES = "TOKEN_DE_PRACTICA_CAMIONES"
