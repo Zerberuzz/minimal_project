@@ -17,4 +17,7 @@ urlpatterns = [
     
     # Clientes
     path('clientes/', include('apps.clientes.urls')),
+    
+    # API Rastreo
+    path('', include('apps.rastreo.urls')),
 ]

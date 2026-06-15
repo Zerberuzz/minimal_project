@@ -195,7 +195,7 @@ def actualizar_bien(request, bien_id):
 
 @require_http_methods(["GET"])
 @login_required
-def reporte_bienes_cliente(request):
+def reporte_mis_bienes(request):
     """
     Reporte de bienes del cliente actual.
     Solo accesible por el cliente dueño de los bienes.
@@ -210,7 +210,7 @@ def reporte_bienes_cliente(request):
     
     registrar_consulta_reporte(
         request.user,
-        'reporte_bienes_cliente',
+        'reporte_mis_bienes',
         request
     )
     
@@ -240,7 +240,7 @@ def reporte_general_bienes(request):
     Reporte general de todos los bienes.
     Solo accesible por supervisores en lectura.
     """
-    bienes = Bien.objects.all().order_by('-creado_en')
+    bienes = Bien.objects.select_related('cliente').all().order_by('-creado_en')
     clientes = Cliente.objects.all()
     
     registrar_consulta_reporte(

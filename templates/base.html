@@ -288,9 +288,9 @@
             {% if user.groups.all|length > 0 %}
                 {% if user.groups.all.0.name == 'cliente' %}
                     <li><a href="{% url 'bienes:crear' %}">➕ Registrar Bien</a></li>
-                    <li><a href="{% url 'bienes:reporte_cliente' %}">📊 Mi Reporte</a></li>
+                    <li><a href="{% url 'bienes:reporte_mis_bienes' %}">📊 Mi Reporte</a></li>
                 {% elif user.groups.all.0.name == 'supervisor' %}
-                    <li><a href="{% url 'bienes:reporte_general' %}">📈 Reporte General</a></li>
+                    <li><a href="{% url 'bienes:reporte_general_bienes' %}">📈 Reporte General</a></li>
                     <li><a href="{% url 'bienes:bitacora' %}">📋 Bitácora de Auditoría</a></li>
                 {% endif %}
             {% endif %}

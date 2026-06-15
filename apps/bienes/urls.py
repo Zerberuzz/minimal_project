@@ -14,8 +14,8 @@ urlpatterns = [
     path('<int:bien_id>/editar/', views.actualizar_bien, name='editar'),
     
     # Reportes
-    path('reporte-cliente/', views.reporte_bienes_cliente, name='reporte_cliente'),
-    path('reporte-general/', views.reporte_general_bienes, name='reporte_general'),
+    path('mis-bienes/', views.reporte_mis_bienes, name='reporte_mis_bienes'),
+    path('reporte-general/', views.reporte_general_bienes, name='reporte_general_bienes'),
     
     # Bitácora
     path('bitacora/', views.ver_bitacora, name='bitacora'),
