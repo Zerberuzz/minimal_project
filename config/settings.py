@@ -19,13 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ppb5n3h6-&-+ik*bzo$vw+3e%6rh)7^p-l18th4feif-c_ys!9'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,9 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "apps.bienes",
-    "apps.clientes",
-    "apps.rastreo",
+    'seguridad',
+    'apps.bienes',
+    'apps.clientes',
 ]
 
 MIDDLEWARE = [
@@ -124,4 +122,77 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "lista_bienes"
 LOGOUT_REDIRECT_URL = "login"
 
-TOKEN_RASTREO_CAMIONES = "TOKEN_DE_PRACTICA_CAMIONES"
+# ============================================================================
+# CONFIGURACIÓN DE SEGURIDAD OWASP TOP 10
+# ============================================================================
+
+# CSRF Protection (Prevención contra ataques CSRF - A04:2021 Cross-Site Request Forgery)
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
+
+# Session Security (Protección de sesiones - A07:2021 Identification and Authentication Failures)
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_AGE = 3600  # 1 hora
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Security Headers (Protección contra XSS - A03:2021 Injection)
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_SECURITY_POLICY = {
+    'default-src': ("'self'",),
+    'script-src': ("'self'",),
+    'style-src': ("'self'", "'unsafe-inline'"),
+    'img-src': ("'self'", 'data:'),
+    'font-src': ("'self'",),
+}
+
+# HTTP Security Headers
+SECURE_SSL_REDIRECT = False  # Cambiar a True en producción con HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 año
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Protección contra Clickjacking (Prevención contra UI Redressing)
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# SQL Injection Prevention (A03:2021 Injection)
+# Django ORM previene automáticamente, pero evitar raw queries o usar parametrización
+
+# Rate Limiting y Control de Acceso
+# (Se implementa en decoradores y middlewares personalizados)
+
+# Logging de eventos de seguridad
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'security.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+}
+
+# Token de autenticación para API GPS (Servicio web seguro de camiones)
+GPS_API_TOKEN = 'gps-token-seguro-2024-uv'
