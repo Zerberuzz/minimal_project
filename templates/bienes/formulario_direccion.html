@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 2rem auto;">
+    <h2 style="margin-bottom: 1.5rem;">{{ titulo }}</h2>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" novalidate style="background: white; padding: 2rem; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.calle.id_for_label }}">Calle</label>
+            {{ form.calle }}
+            <small style="color: #666;">Ej: Avenida Principal</small>
+            {% if form.calle.errors %}
+            <ul class="errorlist">
+                {% for error in form.calle.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="{{ form.numero_exterior.id_for_label }}">Número Exterior</label>
+                {{ form.numero_exterior }}
+                {% if form.numero_exterior.errors %}
+                <ul class="errorlist">
+                    {% for error in form.numero_exterior.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.numero_interior.id_for_label }}">Número Interior</label>
+                {{ form.numero_interior }}
+                {% if form.numero_interior.errors %}
+                <ul class="errorlist">
+                    {% for error in form.numero_interior.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.ciudad.id_for_label }}">Ciudad</label>
+            {{ form.ciudad }}
+            {% if form.ciudad.errors %}
+            <ul class="errorlist">
+                {% for error in form.ciudad.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="{{ form.codigo_postal.id_for_label }}">Código Postal</label>
+                {{ form.codigo_postal }}
+                {% if form.codigo_postal.errors %}
+                <ul class="errorlist">
+                    {% for error in form.codigo_postal.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.estado.id_for_label }}">Estado</label>
+                {{ form.estado }}
+                {% if form.estado.errors %}
+                <ul class="errorlist">
+                    {% for error in form.estado.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="{{ form.latitud.id_for_label }}">Latitud</label>
+                {{ form.latitud }}
+                <small style="color: #666;">Formato: 19.543095</small>
+                {% if form.latitud.errors %}
+                <ul class="errorlist">
+                    {% for error in form.latitud.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.longitud.id_for_label }}">Longitud</label>
+                {{ form.longitud }}
+                <small style="color: #666;">Formato: -96.911132</small>
+                {% if form.longitud.errors %}
+                <ul class="errorlist">
+                    {% for error in form.longitud.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.notas_adicionales.id_for_label }}">Notas Adicionales</label>
+            {{ form.notas_adicionales }}
+            <small style="color: #666;">Opcional, máximo 500 caracteres</small>
+            {% if form.notas_adicionales.errors %}
+            <ul class="errorlist">
+                {% for error in form.notas_adicionales.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+            <a href="{% url 'bienes:lista' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

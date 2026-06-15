@@ -3,7 +3,7 @@ import requests
 url = "http://127.0.0.1:8000/api/camiones/ubicacion/"
 headers = {
 "Content-Type": "application/json",
-"Authorization": "Bearer TOKEN_DE_PRACTICA_CAMIONES",
+"Authorization": "Bearer gps-token-seguro-2024-uv",
 }
 datos = {
 "camion_id": "CAM-0001-2026",
