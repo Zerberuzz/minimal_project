@@ -357,6 +357,55 @@ def crear_direccion(request):
 
 
 @require_http_methods(["POST"])
+@login_required
+@proteger_bien_id
+def eliminar_bien(request, bien_id):
+    """
+    Elimina un bien existente.
+    Los clientes solo pueden eliminar sus propios bienes.
+    """
+    bien = get_object_or_404(Bien, id=bien_id)
+    
+    # Protección contra IDOR (Insecure Direct Object Reference)
+    if es_cliente(request.user):
+        cliente = get_object_or_404(Cliente, usuario=request.user)
+        if bien.cliente != cliente:
+            registrar_acceso_no_autorizado(
+                request.user,
+                'eliminar_bien',
+                f'Intento de eliminar bien ajeno (bien_id={bien_id})',
+                request
+            )
+            raise PermissionDenied(
+                "No tienes permiso para eliminar este bien."
+            )
+    else:
+        raise PermissionDenied(
+            "Solo los clientes pueden eliminar bienes."
+        )
+    
+    try:
+        with transaction.atomic():
+            identificador_bien = bien.identificador
+            bien.delete()
+            
+            registrar_eliminacion_bien(
+                request.user,
+                identificador_bien,
+                request
+            )
+            
+            messages.success(
+                request,
+                f'Bien "{identificador_bien}" eliminado exitosamente.'
+            )
+    except Exception as e:
+        messages.error(request, f'Error al eliminar el bien: {str(e)}')
+        
+    return redirect('bienes:lista')
+
+
+@require_http_methods(["POST"])
 @validar_token_api
 @require_http_methods(["POST"])
 def actualizar_gps_camion(request):

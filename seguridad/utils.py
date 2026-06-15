@@ -142,6 +142,34 @@ def registrar_actualizacion_bien(usuario, bien_id, cambios, request):
         }
     )
 
+def registrar_eliminacion_bien(usuario, bien_id, request):
+    """Registra la eliminación de un bien."""
+    registrar_en_bitacora(
+        usuario=usuario,
+        rol='cliente',
+        accion='eliminar_bien',
+        resultado='exitoso',
+        descripcion=f'Bien eliminado: {bien_id}',
+        request=request,
+        datos_adicionales={
+            'bien_id': bien_id,
+        }
+    )
+
+def registrar_creacion_direccion(usuario, direccion_id, request):
+    """Registra la creación de una dirección."""
+    registrar_en_bitacora(
+        usuario=usuario,
+        rol='cliente',
+        accion='crear_direccion',
+        resultado='exitoso',
+        descripcion=f'Dirección creada con ID: {direccion_id}',
+        request=request,
+        datos_adicionales={
+            'direccion_id': direccion_id,
+        }
+    )
+
 
 def registrar_consulta_reporte(usuario, tipo_reporte, request):
     """Registra la consulta de reportes."""

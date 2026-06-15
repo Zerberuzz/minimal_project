@@ -12,6 +12,7 @@ urlpatterns = [
     
     # Actualizar bien
     path('<int:bien_id>/editar/', views.actualizar_bien, name='editar'),
+    path('<int:bien_id>/eliminar/', views.eliminar_bien, name='eliminar'),
     
     # Reportes
     path('mis-bienes/', views.reporte_mis_bienes, name='reporte_mis_bienes'),
