@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'seguridad',
     'apps.bienes',
     'apps.clientes',
+    'apps.rastreo',
 ]
 
 MIDDLEWARE = [
