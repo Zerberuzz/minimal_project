@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path(
-        "api/camiones/ubicacion/",
+        "camiones/ubicacion/",
         views.registrar_ubicacion,
         name="registrar_ubicacion"
     ),

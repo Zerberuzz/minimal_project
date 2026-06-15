@@ -2,8 +2,11 @@ from django.contrib import admin
 from django.urls import path, include
 from apps.clientes import views as clientes_views
 from apps.bienes import views as bienes_views
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/login/', permanent=False), name='inicio'),
+
     path('admin/', admin.site.urls),
     
     # Autenticación de clientes
@@ -19,5 +22,5 @@ urlpatterns = [
     path('clientes/', include('apps.clientes.urls')),
     
     # API Rastreo
-    path('', include('apps.rastreo.urls')),
+    path('api/', include('apps.rastreo.urls')),
 ]

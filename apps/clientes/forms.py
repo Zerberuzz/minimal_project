@@ -97,7 +97,7 @@ class RegistroClienteForm(forms.ModelForm):
         widgets = {
             'identificador': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Ej: cliente-001',
+                'placeholder': 'Ej: cliente_001',
                 'maxlength': '30',
             }),
             'nombre': forms.TextInput(attrs={

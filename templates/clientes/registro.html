@@ -21,7 +21,7 @@
             <div class="form-group">
                 <label for="{{ form.identificador.id_for_label }}">Identificador</label>
                 {{ form.identificador }}
-                <small style="color: #666;">Debe tener entre 5 y 30 caracteres (ej: cliente-001)</small>
+                <small style="color: #666;">Debe tener entre 5 y 30 caracteres (ej: cliente_001)</small>
                 {% if form.identificador.errors %}
                 <ul class="errorlist">
                     {% for error in form.identificador.errors %}

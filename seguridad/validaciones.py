@@ -1,5 +1,6 @@
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from django.utils.dateparse import parse_datetime
+
 
 def convertir_decimal(valor, nombre_campo):
     try:
@@ -7,18 +8,25 @@ def convertir_decimal(valor, nombre_campo):
     except (InvalidOperation, TypeError):
         raise ValueError(f"El campo {nombre_campo} debe ser numérico.")
 
+
 def validar_latitud(valor):
     latitud = convertir_decimal(valor, "latitud")
-    if latitud < -90 or latitud > 90:
+    if latitud < Decimal("-90") or latitud > Decimal("90"):
         raise ValueError("La latitud debe estar entre -90 y 90.")
-    return latitud
+    try:
+        return latitud.quantize(Decimal('0.000001'), rounding=ROUND_HALF_UP)
+    except InvalidOperation:
+        raise ValueError("La latitud debe tener hasta 6 decimales.")
+
 
 def validar_longitud(valor):
     longitud = convertir_decimal(valor, "longitud")
-    if longitud < -180 or longitud > 180:
+    if longitud < Decimal("-180") or longitud > Decimal("180"):
         raise ValueError("La longitud debe estar entre -180 y 180.")
-    return longitud
-
+    try:
+        return longitud.quantize(Decimal('0.000001'), rounding=ROUND_HALF_UP)
+    except InvalidOperation:
+        raise ValueError("La longitud debe tener hasta 6 decimales.")
 def validar_velocidad(valor):
     velocidad = convertir_decimal(valor, "velocidad")
     if velocidad < 0:

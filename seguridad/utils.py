@@ -97,17 +97,78 @@ def registrar_login_fallido(username, request):
     )
 
 
+def marcar_bitacora_acceso_denegado(request):
+    if request is not None:
+        setattr(request, '_bitacora_acceso_denegado', True)
+
+
+def _rol_de_usuario(usuario):
+    if not usuario:
+        return 'anonimo'
+    grupos = usuario.groups.all()
+    return grupos[0].name if grupos else 'usuario'
+
+
 def registrar_acceso_no_autorizado(usuario, accion, descripcion, request):
     """Registra un intento de acceso no autorizado."""
     registrar_en_bitacora(
         usuario=usuario,
-        rol='anonimo' if not usuario else usuario.groups.first().name,
+        rol=_rol_de_usuario(usuario),
         accion='acceso_no_autorizado',
         resultado='rechazado',
         descripcion=descripcion,
         request=request,
         datos_adicionales={
             'accion_intentada': accion,
+        }
+    )
+    marcar_bitacora_acceso_denegado(request)
+
+
+def registrar_acceso_denegado(usuario, accion_intentada, descripcion, request):
+    """Registra un evento de acceso denegado (403 Forbidden)."""
+    registrar_en_bitacora(
+        usuario=usuario,
+        rol=_rol_de_usuario(usuario),
+        accion='acceso_denegado',
+        resultado='rechazado',
+        descripcion=descripcion,
+        request=request,
+        datos_adicionales={
+            'accion_intentada': accion_intentada,
+        }
+    )
+    marcar_bitacora_acceso_denegado(request)
+
+
+def registrar_alta_cliente_exitoso(usuario, request):
+    """Registra cuando un nuevo cliente se da de alta correctamente."""
+    registrar_en_bitacora(
+        usuario=usuario,
+        rol='cliente',
+        accion='alta_cliente',
+        resultado='exitoso',
+        descripcion=f'Cliente registrado exitosamente: {usuario.username}',
+        request=request,
+        datos_adicionales={
+            'username': usuario.username,
+            'email': usuario.email,
+        }
+    )
+
+
+def registrar_alta_cliente_rechazada(username, motivo, request):
+    """Registra un intento rechazado de alta de cliente."""
+    registrar_en_bitacora(
+        usuario=None,
+        rol='anonimo',
+        accion='alta_cliente',
+        resultado='rechazado',
+        descripcion=f'Intento rechazado de alta de cliente: {motivo}',
+        request=request,
+        datos_adicionales={
+            'username': username,
+            'motivo': motivo,
         }
     )
 

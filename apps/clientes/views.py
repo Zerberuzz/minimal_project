@@ -15,6 +15,8 @@ from seguridad.roles import asignar_rol_cliente, crear_grupos_si_no_existen
 from seguridad.utils import (
     registrar_login_exitoso,
     registrar_login_fallido,
+    registrar_alta_cliente_exitoso,
+    registrar_alta_cliente_rechazada,
 )
 
 
@@ -79,6 +81,7 @@ def registro_view(request):
             crear_grupos_si_no_existen()
             asignar_rol_cliente(cliente.usuario)
             cliente.save()
+            registrar_alta_cliente_exitoso(cliente.usuario, request)
             
             messages.success(
                 request,
@@ -87,6 +90,12 @@ def registro_view(request):
             
             return redirect('login')
         else:
+            username = form.data.get('username', '')
+            registrar_alta_cliente_rechazada(
+                username,
+                'Errores de validación en el formulario de registro',
+                request
+            )
             for campo, errores in form.errors.items():
                 for error in errores:
                     messages.error(request, f'{campo}: {error}')

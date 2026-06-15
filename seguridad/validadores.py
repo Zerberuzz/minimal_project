@@ -1,7 +1,7 @@
 import re
 import html
 from datetime import date
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from django.core.exceptions import ValidationError
 
 
@@ -219,45 +219,53 @@ def sanitizar_texto(valor):
 def validar_latitud(valor):
     """
     Valida la latitud:
-    - Numérico (float/decimal)
+    - Numérico (decimal)
     - Entre -90 y 90
+    - Hasta 6 decimales
     """
     if valor is None or valor == "":
         raise ValidationError("La latitud es obligatoria.")
     
     try:
-        valor_float = float(str(valor).strip())
-    except (ValueError, TypeError):
+        latitud = Decimal(str(valor).strip())
+    except (InvalidOperation, ValueError, TypeError):
         raise ValidationError("La latitud debe ser un número válido.")
     
-    if valor_float < -90 or valor_float > 90:
+    if latitud < Decimal("-90") or latitud > Decimal("90"):
         raise ValidationError(
             "La latitud debe estar entre -90 y 90 grados."
         )
     
-    return round(valor_float, 6)  # Precisión de 6 decimales
+    try:
+        return latitud.quantize(Decimal('0.000001'), rounding=ROUND_HALF_UP)
+    except InvalidOperation:
+        raise ValidationError("La latitud debe tener hasta 6 decimales.")
 
 
 def validar_longitud(valor):
     """
     Valida la longitud:
-    - Numérico (float/decimal)
+    - Numérico (decimal)
     - Entre -180 y 180
+    - Hasta 6 decimales
     """
     if valor is None or valor == "":
         raise ValidationError("La longitud es obligatoria.")
     
     try:
-        valor_float = float(str(valor).strip())
-    except (ValueError, TypeError):
+        longitud = Decimal(str(valor).strip())
+    except (InvalidOperation, ValueError, TypeError):
         raise ValidationError("La longitud debe ser un número válido.")
     
-    if valor_float < -180 or valor_float > 180:
+    if longitud < Decimal("-180") or longitud > Decimal("180"):
         raise ValidationError(
             "La longitud debe estar entre -180 y 180 grados."
         )
     
-    return round(valor_float, 6)  # Precisión de 6 decimales
+    try:
+        return longitud.quantize(Decimal('0.000001'), rounding=ROUND_HALF_UP)
+    except InvalidOperation:
+        raise ValidationError("La longitud debe tener hasta 6 decimales.")
 
 
 # ============================================================================
@@ -307,7 +315,7 @@ def validar_identificador_cliente(valor):
     
     valor = valor.strip()
     
-    if not re.match(r"^[a-zA-Z0-9_-]{5,30}$", valor):
+    if not re.match(r"^[a-zA-Z0-9_]{5,30}$", valor):
         raise ValidationError(
             "El identificador debe contener solo letras, números, guiones y guiones bajos, "
             "con una longitud entre 5 y 30 caracteres."

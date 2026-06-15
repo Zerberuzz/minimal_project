@@ -6,7 +6,7 @@ headers = {
 "Authorization": "Bearer gps-token-seguro-2024-uv",
 }
 datos = {
-"camion_id": "CAM-0001-2026",
+"camion_id": "CAM-001-2026",
 "latitud": 19.5438,
 "longitud": -96.9102,
 "velocidad": 42.5,

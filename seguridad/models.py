@@ -27,6 +27,8 @@ class Bitacora(models.Model):
         ('consultar_bitacora', 'Consultar bitácora'),
         ('actualizar_gps', 'Actualización GPS'),
         ('acceso_no_autorizado', 'Intento de acceso no autorizado'),
+        ('acceso_denegado', 'Acceso denegado'),
+        ('alta_cliente', 'Alta de cliente'),
     ]
     
     usuario = models.ForeignKey(

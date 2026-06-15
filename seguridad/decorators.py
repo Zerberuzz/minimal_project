@@ -154,10 +154,17 @@ def validar_token_api(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         from django.conf import settings
+        from seguridad.utils import registrar_acceso_denegado
         
         token = request.headers.get('Authorization', '').replace('Token ', '')
         
         if not token or token != getattr(settings, 'GPS_API_TOKEN', ''):
+            registrar_acceso_denegado(
+                None,
+                accion_intentada='validar_token_api',
+                descripcion='Token de autenticación inválido o ausente.',
+                request=request
+            )
             return HttpResponseForbidden(
                 "Token de autenticación inválido o ausente."
             )
